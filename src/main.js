@@ -373,3 +373,22 @@ const createLoadMoreButtonTemplate = () => {
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place,template);
 }
+
+const siteMainElement = document.querySelector('.main');
+const siteHeaderElement = siteMainElement.querySelector('.main__control');
+
+render(siteHeaderElement, createSiteMenuTemplate(), 'beforeend');
+render(siteMainElement, createFiltersTemplate(), 'beforeend');
+render(siteMainElement, createBoardTemplate(), 'beforeend');
+
+const boardElement = siteMainElement.querySelector('.board');
+const taskListElement = boardElement.querySelector('.board__tasks');
+
+render(boardElement, createSortingTemplate(), 'afterbegin');
+
+render(taskListElement, createTaskEditTemplate(), 'beforeend');
+render(taskListElement, createTaskTemplate(), 'beforeend');
+render(taskListElement, createTaskTemplate(), 'beforeend');
+render(taskListElement, createTaskTemplate(), 'beforeend');
+
+render(boardElement, createLoadMoreButtonTemplate(), 'beforeend');
