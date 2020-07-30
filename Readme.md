@@ -1,7 +1,7 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Евгений Филатов](https://up.htmlacademy.ru/ecmascript/12/user/68634).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Фаллер](https://htmlacademy.ru/profile/id505933).
 
 ---
 
