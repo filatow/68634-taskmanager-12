@@ -75,11 +75,11 @@ export const generateTask = () => {
     };
 
   return {
-    discription: generateDescription(),
+    description: generateDescription(),
     dueDate,
     repeating,
     color: generateColor(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    isAchive: Boolean(getRandomInteger(0, 1)),
+    isArchive: Boolean(getRandomInteger(0, 1)),
   };
 };
