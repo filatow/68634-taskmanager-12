@@ -62,7 +62,17 @@ const generateColor = () => {
 
 export const generateTask = () => {
   const dueDate = generateDate();
-  const repeating = generateRepeating();
+  const repeating = dueDate === null
+    ? generateRepeating()
+    : {
+      mo: false,
+      tu: false,
+      we: false,
+      th: false,
+      fr: false,
+      sa: false,
+      su: false,
+    };
 
   return {
     discription: generateDescription(),
