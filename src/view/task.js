@@ -5,8 +5,6 @@ const isExpired = (dueDate) => {
   let currentDate = new Date();
   currentDate.setHours(23, 59, 59, 999);
 
-  // currentDate = new Date(currentDate);
-
   return currentDate.getTime() > dueDate.getTime();
 };
 
