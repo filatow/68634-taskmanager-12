@@ -7,7 +7,6 @@ const createFilterTemplate = (filter, isChecked) => {
       id="filter__${name}"
       class="filter__input visually-hidden"
       name="filter"
-      disabled
       ${isChecked ? `checked` : ``}
       ${count === 0 ? `disabled` : ``}
       />
