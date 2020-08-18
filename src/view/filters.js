@@ -19,7 +19,7 @@ const createFilterTemplate = (filter, isChecked) => {
   );
 };
 
-export const createFiltersTemplate = (filters) => {
+const createFiltersTemplate = (filters) => {
   const filtersTemplate = filters
     .map((filter, index) => createFilterTemplate(filter, index === 0))
     .join(``);
