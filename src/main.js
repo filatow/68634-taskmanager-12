@@ -20,6 +20,13 @@ const filters = generateFilter(tasks);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
+const renderTask = (taskListElement, task) => {
+  const taskComponent = new TaskView(task);
+  const taskEditComponent = new TaskEditView(task);
+
+  render(taskListElement, taskComponent.element, RenderPosition.BEFOREEND);
+};
+
 render(siteHeaderElement, new SiteMenuView().element, RenderPosition.BEFOREEND);
 render(siteMainElement, new FiltersView(filters).element, RenderPosition.BEFOREEND);
 
@@ -31,10 +38,8 @@ render(boardComponent.element, taskListComponent.element, RenderPosition.BEFOREE
 
 render(boardComponent.element, new SortingView().element, RenderPosition.AFTERBEGIN);
 
-render(taskListComponent.element, new TaskEditView(tasks[0]).element, RenderPosition.BEFOREEND);
-
-for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STER); i++) {
-  render(taskListComponent.element, new TaskView(tasks[i]).element, RenderPosition.BEFOREEND);
+for (let i = 0; i < Math.min(tasks.length, TASK_COUNT_PER_STER); i++) {
+  renderTask(taskListComponent.element, tasks[i]);
 }
 
 if (tasks.length > TASK_COUNT_PER_STER) {
@@ -47,7 +52,7 @@ if (tasks.length > TASK_COUNT_PER_STER) {
     event.preventDefault();
     tasks
       .slice(renderedTasksCount, renderedTasksCount + TASK_COUNT_PER_STER)
-      .forEach((task) => render(taskListComponent.element, new TaskView(task).element, RenderPosition.BEFOREEND));
+      .forEach((task) => renderTask(taskListComponent.element, task));
 
     renderedTasksCount += TASK_COUNT_PER_STER;
     if (renderedTasksCount > tasks.length) {
