@@ -1,11 +1,10 @@
 import SiteMenuView from "./view/site-menu.js";
-// import {createSiteMenuTemplate} from "./view/site-menu.js";
 import {createFiltersTemplate} from "./view/filters.js";
 import {createBoardTemplate} from "./view/board.js";
 import {createSortingTemplate} from "./view/sorting.js";
 import {createTaskTemplate} from "./view/task.js";
 import {createTaskEditTemplate} from "./view/task-edit.js";
-import {createLoadMoreButtonTemplate} from "./view/load-more-button.js";
+import LoadMoreButton from "./view/load-more-button.js";
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filters.js";
 import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
@@ -38,7 +37,7 @@ for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STER); i++) {
 if (tasks.length > TASK_COUNT_PER_STER) {
   let renderedTasksCount = TASK_COUNT_PER_STER;
 
-  renderTemplate(boardElement, createLoadMoreButtonTemplate(), `beforeend`);
+  renderElement(boardElement, new LoadMoreButton().element, RenderPosition.BEFOREEND);
 
   const loadMoreButton = document.querySelector(`.load-more`);
 
