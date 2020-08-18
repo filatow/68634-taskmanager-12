@@ -1,4 +1,4 @@
-import {COLORS} from "../const.js";
+import {COLORS} from "../consts.js";
 import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
 
 
@@ -108,7 +108,7 @@ export const createTaskEditTemplate = (task = {}) => {
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__color-bar">
-            <svg width="100%" height="10">
+            <svg class="card__color-bar-wave" width="100%" height="10">
               <use xlink:href="#wave"></use>
             </svg>
           </div>
