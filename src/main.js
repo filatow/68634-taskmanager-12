@@ -22,37 +22,38 @@ const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 renderElement(siteHeaderElement, new SiteMenuView().element, RenderPosition.BEFOREEND);
 renderTemplate(siteMainElement, createFiltersTemplate(filters), `beforeend`);
-renderElement(siteMainElement, new BoardView().element, RenderPosition.BEFOREEND);
 
-const boardElement = siteMainElement.querySelector(`.board`);
-renderElement(boardElement, new TaskListView().element, RenderPosition.BEFOREEND);
+const boardComponent = new BoardView();
+renderElement(siteMainElement, boardComponent.element, RenderPosition.BEFOREEND);
 
-const taskListElement = boardElement.querySelector(`.board__tasks`);
+const taskListComponent = new TaskListView();
+renderElement(boardComponent.element, taskListComponent.element, RenderPosition.BEFOREEND);
 
-renderElement(boardElement, new SortingView().element, RenderPosition.AFTERBEGIN);
+renderElement(boardComponent.element, new SortingView().element, RenderPosition.AFTERBEGIN);
 
-renderTemplate(taskListElement, createTaskEditTemplate(tasks[0]), `beforeend`);
+renderTemplate(taskListComponent.element, createTaskEditTemplate(tasks[0]), `beforeend`);
 
 for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STER); i++) {
-  renderTemplate(taskListElement, createTaskTemplate(tasks[i]), `beforeend`);
+  renderTemplate(taskListComponent.element, createTaskTemplate(tasks[i]), `beforeend`);
 }
 
 if (tasks.length > TASK_COUNT_PER_STER) {
   let renderedTasksCount = TASK_COUNT_PER_STER;
 
-  renderElement(boardElement, new LoadMoreButtonView().element, RenderPosition.BEFOREEND);
+  const loadMoreButtonComponent = new LoadMoreButtonView();
+  renderElement(boardComponent.element, loadMoreButtonComponent.element, RenderPosition.BEFOREEND);
 
-  const loadMoreButton = document.querySelector(`.load-more`);
-
-  loadMoreButton.addEventListener(`click`, (event) => {
+  loadMoreButtonComponent.element.addEventListener(`click`, (event) => {
     event.preventDefault();
     tasks
       .slice(renderedTasksCount, renderedTasksCount + TASK_COUNT_PER_STER)
-      .forEach((task) => renderTemplate(taskListElement, createTaskTemplate(task), `beforeend`));
+      .forEach((task) => renderTemplate(taskListComponent.element, createTaskTemplate(task), `beforeend`));
 
     renderedTasksCount += TASK_COUNT_PER_STER;
     if (renderedTasksCount > tasks.length) {
-      loadMoreButton.remove();
+      loadMoreButtonComponent.element.remove();
+      loadMoreButtonComponent.removeElement();
+
     }
   });
 }
