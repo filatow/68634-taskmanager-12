@@ -1,5 +1,5 @@
 import {getRandomInteger} from "../utils.js";
-import {COLORS} from "../const.js";
+import {COLORS} from "../consts.js";
 
 const generateDescription = () => {
   const descriptions = [
@@ -62,10 +62,10 @@ export const generateTask = () => {
     };
 
   return {
+    color: generateColor(),
     description: generateDescription(),
     dueDate,
     repeating,
-    color: generateColor(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     isArchive: Boolean(getRandomInteger(0, 1)),
   };

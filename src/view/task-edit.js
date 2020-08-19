@@ -1,6 +1,20 @@
-import {COLORS} from "../const.js";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
+import {COLORS} from "../consts.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../utils.js";
 
+const BLANK_TASK = {
+  color: COLORS[0],
+  description: ``,
+  dueDate: null,
+  repeating: {
+    mo: false,
+    tu: false,
+    we: false,
+    th: false,
+    fr: false,
+    sa: false,
+    su: false
+  }
+};
 
 const createTaskEditDateTemplate = (dueDate) => {
   return (
@@ -24,7 +38,6 @@ const createTaskEditDateTemplate = (dueDate) => {
     }`
   );
 };
-
 
 const createTaskEditRepeatingTemplate = (repeating) => {
   return (
@@ -75,21 +88,8 @@ const createTastEditColorsTemplate = (currentColor) => {
   );
 };
 
-export const createTaskEditTemplate = (task = {}) => {
-  const {
-    color = `black`,
-    description = ``,
-    dueDate = null,
-    repeating = {
-      mo: false,
-      tu: false,
-      we: false,
-      th: false,
-      fr: false,
-      sa: false,
-      su: false
-    }
-  } = task;
+const createTaskEditTemplate = (task) => {
+  const {color, description, dueDate, repeating} = task;
 
   const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
@@ -108,7 +108,7 @@ export const createTaskEditTemplate = (task = {}) => {
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__color-bar">
-            <svg width="100%" height="10">
+            <svg class="card__color-bar-wave" width="100%" height="10">
               <use xlink:href="#wave"></use>
             </svg>
           </div>
@@ -149,3 +149,26 @@ export const createTaskEditTemplate = (task = {}) => {
     </article>`
   );
 };
+
+export default class TaskEdit {
+  constructor(task = BLANK_TASK) {
+    this._task = task;
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  get element() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
