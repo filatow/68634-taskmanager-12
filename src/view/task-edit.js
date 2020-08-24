@@ -1,5 +1,6 @@
-import {COLORS} from "../consts.js";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../utils.js";
+import AbstractView from "./abstract";
+import {COLORS} from "../consts";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task";
 
 const BLANK_TASK = {
   color: COLORS[0],
@@ -150,25 +151,25 @@ const createTaskEditTemplate = (task) => {
   );
 };
 
-export default class TaskEdit {
+export default class TaskEdit extends AbstractView {
   constructor(task = BLANK_TASK) {
+    super();
     this._task = task;
-    this._element = null;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   _getTemplate() {
     return createTaskEditTemplate(this._task);
   }
 
-  get element() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(event) {
+    event.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitCallback(callback) {
+    this._callback.formSubmit = callback;
+    this.element.querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 }
