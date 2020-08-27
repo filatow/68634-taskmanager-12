@@ -24,6 +24,7 @@ export default class Board {
     this._loadMoreButtonComponent = new LoadMoreButtonView();
 
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(boardTasks) {
@@ -56,6 +57,9 @@ export default class Board {
       return;
     }
     this._sortTasks(sortType);
+
+    this._clearTaskList();
+    this._renderTaskList();
   }
 
   _renderSorting() {
@@ -100,6 +104,11 @@ export default class Board {
     this._boardTasks
       .slice(from, to)
       .forEach((boardTask) => this._renderTask(boardTask));
+  }
+
+  _clearTaskList() {
+    this._taskListComponent.element.innerHTML = ``;
+    this._renderedTasksCount = TASK_COUNT_PER_STER;
   }
 
   _renderTaskList() {
