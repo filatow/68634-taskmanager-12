@@ -12,7 +12,27 @@ const createSortingTemplate = () => {
 };
 
 export default class Sorting extends AbstractView {
+  constructor() {
+    super();
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+  }
+
   _getTemplate() {
     return createSortingTemplate();
+  }
+
+  _sortTypeChangeHandler(event) {
+    if (event.target.tagName !== `A`) {
+      return;
+    }
+
+    event.preventDefault();
+    this._callback.sortTypeChange(event.target.dataset.sortType);
+  }
+
+  setSortTypeChangeHandler(callback) {
+    this._callback.sortTypeChange = callback;
+    this.element.addEventListener(`click`, this._sortChangeHandler);
   }
 }
