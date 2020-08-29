@@ -46,7 +46,7 @@ export default class Board {
         this._boardTasks.sort(sortTaskDown);
         break;
       default:
-        this._boardTasks = this._soursedBoardTasks;
+        this._boardTasks = this._soursedBoardTasks.slice();
     }
 
     this._currentSortType = sortType;
