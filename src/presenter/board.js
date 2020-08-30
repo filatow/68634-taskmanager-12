@@ -15,6 +15,7 @@ export default class Board {
     this._boardContainer = boardContainer;
     this._renderedTasksCount = TASK_COUNT_PER_STER;
     this._currentSortType = SortType.DEFAULT;
+    this._taskPresenter = {};
 
     this._boardComponent = new BoardView();
     this._sortingComponent = new SortingView();
@@ -69,6 +70,7 @@ export default class Board {
   _renderTask(task) {
     const taskPresenter = new TaskPresenter(this._taskListComponent);
     taskPresenter.init(task);
+    this._taskPresenter[task.id] = taskPresenter;
   }
 
   _renderTasks(from, to) {
@@ -78,7 +80,10 @@ export default class Board {
   }
 
   _clearTaskList() {
-    this._taskListComponent.element.innerHTML = ``;
+    Object
+      .values(this._taskPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._taskPresenter = {};
     this._renderedTasksCount = TASK_COUNT_PER_STER;
   }
 
