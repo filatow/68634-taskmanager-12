@@ -8,7 +8,12 @@ export const getRandomInteger = (a = 0, b = 1) => {
 };
 
 export const updateItem = (items, updatedItem) => {
-  const index = items.findIndex((item) => item.id === updatedItem.id);
+  const index = items.findIndex((item) => {
+    // console.log(item);
+    // console.log(updatedItem);
+
+    return item.id === updatedItem.id;
+  });
 
   if (index === -1) {
     return items;

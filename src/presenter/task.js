@@ -96,12 +96,12 @@ export default class Task {
     );
   }
 
-  _handleEditClick(task) {
-    this._changeData(task);
+  _handleEditClick() {
     this._replaceCardToForm();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(task) {
+    this._changeData(task);
     this._replaceFormToCard();
   }
 }
