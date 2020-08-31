@@ -20,18 +20,17 @@ const BLANK_TASK = {
 const createTaskEditDateTemplate = (dueDate, isDueDate) => {
   return (
     `<button class="card__date-deadline-toggle" type="button">
-      date: <span class="card__date-status">${isDueDate ? `no` : `yes`}</span>
+      date: <span class="card__date-status">${isDueDate ? `yes` : `no`}</span>
     </button>
-
     ${isDueDate
-      ? `<fieldset class="card__date-deadline" disabled>
+      ? `<fieldset class="card__date-deadline">
           <label class="card__input-deadline-wrap">
             <input
               class="card__date"
               type="text"
               placeholder=""
               name="date"
-              value="${humanizeTaskDueDate(dueDate)}"
+              value="${dueDate !== null ? humanizeTaskDueDate(dueDate) : ``}"
             />
           </label>
         </fieldset>`
@@ -92,15 +91,14 @@ const createTastEditColorsTemplate = (currentColor) => {
 const createTaskEditTemplate = (data) => {
   const {color, description, dueDate, repeating, isDueDate, isRepeating} = data;
 
-  const deadlineClassName = isTaskExpired(dueDate, isDueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
+  const dateTemplate = createTaskEditDateTemplate(dueDate, isDueDate);
 
   const repeatingClassName = isRepeating
     ? `card--repeat`
     : ``;
-
-  const dateTemplate = createTaskEditDateTemplate(dueDate);
   const repeatingTemplate = createTaskEditRepeatingTemplate(repeating, isRepeating);
   const colorTemplate = createTastEditColorsTemplate(color);
 
@@ -157,6 +155,10 @@ export default class TaskEdit extends AbstractView {
     this._data = TaskEdit.parseTaskToData(task);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._dueDateToggleHandler = this._dueDateToggleHandler.bind(this);
+    this._repeatingToggleHandler = this._repeatingToggleHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   updateData(update) {
@@ -182,15 +184,45 @@ export default class TaskEdit extends AbstractView {
 
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
+
+    this.restoreHandlers();
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitCallback(this._callback.formSubmit);
   }
 
   _getTemplate() {
     return createTaskEditTemplate(this._data);
   }
 
+  _setInnerHandlers() {
+    this.element
+      .querySelector(`.card__date-deadline-toggle`)
+      .addEventListener(`click`, this._dueDateToggleHandler);
+    this.element
+      .querySelector(`.card__repeat-toggle`)
+      .addEventListener(`click`, this._repeatingToggleHandler);
+  }
+
   _formSubmitHandler(event) {
     event.preventDefault();
     this._callback.formSubmit(TaskEdit.parseDataToTask(this._data));
+  }
+
+  _dueDateToggleHandler(event) {
+    event.preventDefault();
+    this.updateData({
+      isDueDate: !this._data.isDueDate
+    });
+  }
+
+  _repeatingToggleHandler(event) {
+    event.preventDefault();
+    this.updateData({
+      isRepeating: !this._data.isRepeating
+    });
   }
 
   setFormSubmitCallback(callback) {
