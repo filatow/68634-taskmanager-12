@@ -41,7 +41,7 @@ export default class Task {
     }
 
     if (this._taskListContainer.element.contains(prevTaskEditComponent.element)) {
-      replace(this._taskEditComponent, prevTaskComponent);
+      replace(this._taskEditComponent, prevTaskEditComponent);
     }
 
     remove(prevTaskComponent);
