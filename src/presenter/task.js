@@ -68,6 +68,7 @@ export default class Task {
   _escKeyDownHandler(event) {
     if (event.key === `Escape` || event.key === `Esc`) {
       event.preventDefault();
+      this._taskEditComponent.reset(this._task);
       this._replaceFormToCard();
     }
   }
