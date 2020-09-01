@@ -157,11 +157,12 @@ export default class TaskEdit extends AbstractView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._dueDateToggleHandler = this._dueDateToggleHandler.bind(this);
     this._repeatingToggleHandler = this._repeatingToggleHandler.bind(this);
+    this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
 
     this._setInnerHandlers();
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdate) {
     if (!update) {
       return;
     }
@@ -171,6 +172,10 @@ export default class TaskEdit extends AbstractView {
         this._data,
         update
     );
+
+    if (justDataUpdate) {
+      return;
+    }
 
     this.updateElement();
   }
@@ -204,6 +209,9 @@ export default class TaskEdit extends AbstractView {
     this.element
       .querySelector(`.card__repeat-toggle`)
       .addEventListener(`click`, this._repeatingToggleHandler);
+    this.element
+      .querySelector(`.card__text`)
+      .addEventListener(`input`, this._descriptionInputHandler);
   }
 
   _formSubmitHandler(event) {
@@ -223,6 +231,13 @@ export default class TaskEdit extends AbstractView {
     this.updateData({
       isRepeating: !this._data.isRepeating
     });
+  }
+
+  _descriptionInputHandler(event) {
+    event.preventDefault();
+    this.updateData({
+      description: event.target.value
+    }, true);
   }
 
   setFormSubmitCallback(callback) {
