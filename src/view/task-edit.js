@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import SmartView from "./smart";
 import {COLORS} from "../consts";
 import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task";
 
@@ -150,7 +150,7 @@ const createTaskEditTemplate = (data) => {
   );
 };
 
-export default class TaskEdit extends AbstractView {
+export default class TaskEdit extends SmartView {
   constructor(task = BLANK_TASK) {
     super();
     this._data = TaskEdit.parseTaskToData(task);
@@ -163,37 +163,6 @@ export default class TaskEdit extends AbstractView {
     this._colorChangeHandler = this._colorChangeHandler.bind(this);
 
     this._setInnerHandlers();
-  }
-
-  updateData(update, justDataUpdate) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    if (justDataUpdate) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.element;
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.element;
-
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
-
-    this.restoreHandlers();
   }
 
   restoreHandlers() {
