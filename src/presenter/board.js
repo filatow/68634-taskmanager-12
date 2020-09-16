@@ -124,16 +124,16 @@ export default class Board {
     tasks.forEach((task) => this._renderTask(task));
   }
 
-  _renderTaskList() {
-    const taskCount = this._getTasks().length;
-    const tasks = this._getTasks().slice(0, Math.min(taskCount, TASK_COUNT_PER_STEP));
+  // _renderTaskList() {
+  //   const taskCount = this._getTasks().length;
+  //   const tasks = this._getTasks().slice(0, Math.min(taskCount, TASK_COUNT_PER_STEP));
 
-    this._renderTasks(tasks);
+  //   this._renderTasks(tasks);
 
-    if (taskCount > TASK_COUNT_PER_STEP) {
-      this._renderLoadMoreButton();
-    }
-  }
+  //   if (taskCount > TASK_COUNT_PER_STEP) {
+  //     this._renderLoadMoreButton();
+  //   }
+  // }
 
   _renderNoTasks() {
     render(this._boardComponent, this._noTaskComponent, RenderPosition.AFTERBEGIN);
@@ -168,13 +168,13 @@ export default class Board {
     render(this._boardComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTaskList() {
-    Object
-      .values(this._taskPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._taskPresenter = {};
-    this._renderedTasksCount = TASK_COUNT_PER_STEP;
-  }
+  // _clearTaskList() {
+  //   Object
+  //     .values(this._taskPresenter)
+  //     .forEach((presenter) => presenter.destroy());
+  //   this._taskPresenter = {};
+  //   this._renderedTasksCount = TASK_COUNT_PER_STEP;
+  // }
 
   _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const taskCount = this._getTasks().length;
