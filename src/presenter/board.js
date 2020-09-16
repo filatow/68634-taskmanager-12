@@ -12,8 +12,9 @@ import {SortType} from "../consts";
 const TASK_COUNT_PER_STER = 8;
 
 export default class Board {
-  constructor(boardContainer) {
+  constructor(boardContainer, taskModel) {
     this._boardContainer = boardContainer;
+    this._taskModel = taskModel;
     this._renderedTasksCount = TASK_COUNT_PER_STER;
     this._currentSortType = SortType.DEFAULT;
     this._taskPresenter = {};
@@ -38,6 +39,10 @@ export default class Board {
     render(this._boardComponent, this._taskListComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _getTasks() {
+    return this._taskModel.getTasks();
   }
 
   _sortTasks(sortType) {
