@@ -2,6 +2,7 @@ import SmartView from "./smart";
 import {COLORS} from "../consts";
 import {isTaskRepeating, formatTaskDueDate} from "../utils/task";
 import flatpickr from "flatpickr";
+import he from "he";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -118,7 +119,7 @@ const createTaskEditTemplate = (data) => {
                 class="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >${description}</textarea>
+              >${he.encode(description)}</textarea>
             </label>
           </div>
 
@@ -156,6 +157,7 @@ export default class TaskEdit extends SmartView {
     this._datepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._dueDateToggleHandler = this._dueDateToggleHandler.bind(this);
     this._dueDateChangeHandler = this._dueDateChangeHandler.bind(this);
     this._repeatingToggleHandler = this._repeatingToggleHandler.bind(this);
@@ -171,6 +173,16 @@ export default class TaskEdit extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitCallback(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(task) {
@@ -234,6 +246,11 @@ export default class TaskEdit extends SmartView {
     this._callback.formSubmit(TaskEdit.parseDataToTask(this._data));
   }
 
+  _formDeleteClickHandler(event) {
+    event.preventDefault();
+    this._callback.deleteClick(TaskEdit.parseDataToTask(this._data));
+  }
+
   _dueDateToggleHandler(event) {
     event.preventDefault();
     this.updateData({
@@ -278,6 +295,11 @@ export default class TaskEdit extends SmartView {
   setFormSubmitCallback(callback) {
     this._callback.formSubmit = callback;
     this.element.querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.element.querySelector(`.card__delete`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   static parseTaskToData(task) {

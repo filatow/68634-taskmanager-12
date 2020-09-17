@@ -1,22 +1,33 @@
 import SiteMenuView from "./view/site-menu";
-import FiltersView from "./view/filters";
 import {generateTask} from "./mock/task";
-import {generateFilter} from "./mock/filters";
 import {render, RenderPosition} from "./utils/render";
 import BoardPresenter from "./presenter/board";
+import FilterPresenter from "./presenter/filter.js";
+import TasksModel from "./model/tasks.js";
+import FilterModel from "./model/filter.js";
 
 const TASK_COUNT = 20;
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
-const filters = generateFilter(tasks);
+
+const tasksModel = new TasksModel();
+tasksModel.setTasks(tasks);
+
+const filterModel = new FilterModel();
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const boardPresenter = new BoardPresenter(siteMainElement);
-
-
 render(siteHeaderElement, new SiteMenuView(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FiltersView(filters), RenderPosition.BEFOREEND);
 
-boardPresenter.init(tasks);
+const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
+
+
+filterPresenter.init();
+boardPresenter.init();
+
+document.querySelector(`#control__new-task`).addEventListener(`click`, (event) => {
+  event.preventDefault();
+  boardPresenter.createTask();
+});
