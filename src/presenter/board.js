@@ -6,15 +6,17 @@ import LoadMoreButtonView from "../view/load-more-button";
 import TaskPresenter from "./task";
 import {render, remove, RenderPosition} from "../utils/render";
 import {sortTaskUp, sortTaskDown} from "../utils/task";
+import {filter} from "../utils/filter.js";
 import {SortType, UserAction, UpdateType} from "../consts";
 // import Sorting from "../view/sorting";
 
 const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
-  constructor(boardContainer, taskModel) {
+  constructor(boardContainer, taskModel, filterModel) {
     this._boardContainer = boardContainer;
-    this._taskModel = taskModel;
+    this._tasksModel = taskModel;
+    this._filterModel = filterModel;
     this._renderedTasksCount = TASK_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
     this._taskPresenter = {};
@@ -34,7 +36,8 @@ export default class Board {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._taskModel.addObserver(this._handleModelEvent);
+    this._tasksModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -46,14 +49,18 @@ export default class Board {
   }
 
   _getTasks() {
+    const filterType = this._filterModel.getFilter();
+    const tasks = this._tasksModel.getTasks();
+    const filteredTasks = filter[filterType](tasks);
+
     switch (this._currentSortType) {
       case SortType.DATE_UP:
-        return this._taskModel.getTasks().slice().sort(sortTaskUp);
+        return filteredTasks.sort(sortTaskUp);
       case SortType.DATE_DOWN:
-        return this._taskModel.getTasks().slice().sort(sortTaskDown);
+        return filteredTasks.sort(sortTaskDown);
     }
 
-    return this._taskModel.getTasks();
+    return filteredTasks;
   }
 
   _handleSortTypeChange(sortType) {
@@ -87,13 +94,13 @@ export default class Board {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-        this._taskModel.updateTask(updateType, update);
+        this._tasksModel.updateTask(updateType, update);
         break;
       case UserAction.ADD_TASK:
-        this._taskModel.addTask(updateType, update);
+        this._tasksModel.addTask(updateType, update);
         break;
       case UserAction.DELETE_TASK:
-        this._taskModel.deleteTask(updateType, update);
+        this._tasksModel.deleteTask(updateType, update);
         break;
     }
   }
