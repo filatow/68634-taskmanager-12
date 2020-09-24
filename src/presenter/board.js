@@ -8,7 +8,7 @@ import TaskNewPresenter from "./task-new";
 import {render, remove, RenderPosition} from "../utils/render";
 import {sortTaskUp, sortTaskDown} from "../utils/task";
 import {filter} from "../utils/filter.js";
-import {SortType, UserAction, UpdateType, FilterType} from "../consts";
+import {SortType, UserAction, UpdateType} from "../consts";
 
 const TASK_COUNT_PER_STEP = 8;
 
@@ -34,23 +34,30 @@ export default class Board {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._tasksModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._taskNewPresenter = new TaskNewPresenter(this._taskListComponent, this._handleViewAction);
   }
 
   init() {
-
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
     render(this._boardComponent, this._taskListComponent, RenderPosition.BEFOREEND);
+
+    this._tasksModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
 
     this._renderBoard();
   }
 
+  destroy() {
+    this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
+
+    remove(this._taskListComponent);
+    remove(this._boardComponent);
+
+    this._tasksModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
   createTask(callback) {
-    this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
     this._taskNewPresenter.init(callback);
   }
 

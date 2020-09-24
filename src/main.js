@@ -5,7 +5,7 @@ import BoardPresenter from "./presenter/board";
 import FilterPresenter from "./presenter/filter.js";
 import TasksModel from "./model/tasks.js";
 import FilterModel from "./model/filter.js";
-import {MenuItem} from "./consts";
+import {MenuItem, UpdateType, FilterType} from "./consts";
 
 const TASK_COUNT = 20;
 
@@ -33,15 +33,17 @@ const handleTaskNewFormClose = () => {
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_TASK:
-
+      boardPresenter.destroy();
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+      boardPresenter.init();
       boardPresenter.createTask(handleTaskNewFormClose);
       siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
       break;
     case MenuItem.TASKS:
-
+      boardPresenter.init();
       break;
     case MenuItem.STATISTICS:
-
+      boardPresenter.destroy();
       break;
   }
 };
