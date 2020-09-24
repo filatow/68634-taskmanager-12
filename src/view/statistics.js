@@ -210,7 +210,6 @@ export default class Statistics extends SmartView {
 
   _getTemplate() {
     return createStatisticsTemplate(this._data);
-
   }
 
   restoreHandlers() {
