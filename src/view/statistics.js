@@ -3,7 +3,15 @@ import SmartView from "./smart";
 import {getCurrentDate} from "../utils/task";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import {countCompletedTaskInDateRange, makeItemsUnique, countTasksByColor, colorToHex} from "../utils/statistics";
+import {
+  countCompletedTaskInDateRange,
+  makeItemsUnique,
+  countTasksByColor,
+  colorToHex,
+  parseChartDate,
+  countTasksInDateRange,
+  getDatesInRange
+} from "../utils/statistics";
 
 const renderColorChart = (colorsCtx, tasks) => {
   const taskColors = tasks.map((task) => task.color);
@@ -67,13 +75,17 @@ const renderColorChart = (colorsCtx, tasks) => {
 };
 
 const renderDaysChart = (daysCtx, tasks, dateFrom, dateTo) => {
+  const dates = getDatesInRange(dateFrom, dateTo);
+  const parsedDates = dates.map(parseChartDate);
+  const taskInDateRangeCounts = countTasksInDateRange(dates, tasks);
+
   return new Chart(daysCtx, {
     plugins: [ChartDataLabels],
     type: `line`,
     data: {
-      labels: [`3 Sep`], // Сюда нужно передать названия дней
+      labels: parsedDates,
       datasets: [{
-        data: [1], // Сюда нужно передать в том же порядке количество задач по каждому дню
+        data: taskInDateRangeCounts,
         backgroundColor: `transparent`,
         borderColor: `#000000`,
         borderWidth: 1,
