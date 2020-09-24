@@ -5,6 +5,7 @@ import BoardPresenter from "./presenter/board";
 import FilterPresenter from "./presenter/filter.js";
 import TasksModel from "./model/tasks.js";
 import FilterModel from "./model/filter.js";
+import {MenuItem} from "./consts";
 
 const TASK_COUNT = 20;
 
@@ -17,17 +18,35 @@ const filterModel = new FilterModel();
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+const siteMenuComponent = new SiteMenuView();
 
-render(siteHeaderElement, new SiteMenuView(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
 
 const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
 
+const handleTaskNewFormClose = () => {
+  siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = false;
+  siteMenuComponent.setMenuItem(MenuItem.TASKS);
+};
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.ADD_NEW_TASK:
+
+      boardPresenter.createTask(handleTaskNewFormClose);
+      siteMenuComponent.element.querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
+      break;
+    case MenuItem.TASKS:
+
+      break;
+    case MenuItem.STATISTICS:
+
+      break;
+  }
+};
+
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 boardPresenter.init();
-
-document.querySelector(`#control__new-task`).addEventListener(`click`, (event) => {
-  event.preventDefault();
-  boardPresenter.createTask();
-});
